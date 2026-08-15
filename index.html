@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Zombie Survival Game</title>
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Game Header -->
+    <header class="game-header">
+        <h1>🧟 Zombie Survival</h1>
+
+        <div class="game-stats">
+            <span>❤️ Health: <strong id="health">100</strong></span>
+            <span>🎯 Score: <strong id="score">0</strong></span>
+            <span>💀 Zombies: <strong id="zombies">0</strong></span>
+        </div>
+    </header>
+
+    <!-- Main Game Area -->
+    <main>
+
+        <div id="game-area">
+
+            <!-- Player -->
+            <div id="player">
+                🔫
+            </div>
+
+        </div>
+
+        <!-- Game Over Screen -->
+        <div id="game-over" class="hidden">
+            <h2>💀 GAME OVER</h2>
+            <p>Your Score: <strong id="final-score">0</strong></p>
+
+            <button id="restart-btn">
+                🔄 Restart Game
+            </button>
+        </div>
+
+    </main>
+
+    <!-- Game Instructions -->
+    <section class="instructions">
+        <h2>How to Play</h2>
+
+        <p>🎮 Use <strong>W A S D</strong> or <strong>Arrow Keys</strong> to move.</p>
+        <p>🖱️ Click to shoot zombies.</p>
+        <p>🧟 Survive as long as possible!</p>
+    </section>
+
+    <!-- JavaScript -->
+    <script src="game.js"></script>
+
+</body>
+</html>
