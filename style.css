@@ -1,0 +1,252 @@
+/* =========================
+   GENERAL PAGE
+========================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #111;
+    color: white;
+    text-align: center;
+    min-height: 100vh;
+}
+
+
+/* =========================
+   GAME HEADER
+========================= */
+
+.game-header {
+    background: #1b1b1b;
+    padding: 15px;
+    border-bottom: 2px solid #444;
+}
+
+.game-header h1 {
+    margin-bottom: 12px;
+    font-size: 28px;
+}
+
+.game-stats {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    font-size: 18px;
+}
+
+.game-stats span {
+    background: #292929;
+    padding: 8px 15px;
+    border-radius: 8px;
+}
+
+
+/* =========================
+   GAME AREA
+========================= */
+
+#game-area {
+    position: relative;
+    width: 90%;
+    max-width: 1000px;
+    height: 600px;
+    margin: 25px auto;
+    overflow: hidden;
+
+    background-color: #263526;
+
+    background-image:
+        linear-gradient(#304530 1px, transparent 1px),
+        linear-gradient(90deg, #304530 1px, transparent 1px);
+
+    background-size: 40px 40px;
+
+    border: 4px solid #555;
+    border-radius: 12px;
+
+    cursor: crosshair;
+}
+
+
+/* =========================
+   PLAYER
+========================= */
+
+#player {
+    position: absolute;
+
+    width: 45px;
+    height: 45px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 30px;
+
+    background: #3498db;
+    border-radius: 50%;
+
+    left: 50%;
+    top: 50%;
+
+    transform: translate(-50%, -50%);
+
+    z-index: 10;
+}
+
+
+/* =========================
+   ZOMBIES
+========================= */
+
+.zombie {
+    position: absolute;
+
+    width: 45px;
+    height: 45px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 30px;
+
+    background: #4caf50;
+    border-radius: 50%;
+}
+
+
+/* =========================
+   BULLETS
+========================= */
+
+.bullet {
+    position: absolute;
+
+    width: 10px;
+    height: 10px;
+
+    background: #ffd700;
+
+    border-radius: 50%;
+
+    z-index: 5;
+}
+
+
+/* =========================
+   GAME OVER
+========================= */
+
+#game-over {
+    position: fixed;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    background: #1c1c1c;
+
+    padding: 40px;
+
+    border: 3px solid #e74c3c;
+    border-radius: 15px;
+
+    z-index: 100;
+}
+
+#game-over h2 {
+    font-size: 40px;
+    margin-bottom: 15px;
+}
+
+#game-over p {
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+
+/* =========================
+   RESTART BUTTON
+========================= */
+
+#restart-btn {
+    padding: 12px 25px;
+
+    font-size: 18px;
+    font-weight: bold;
+
+    border: none;
+    border-radius: 8px;
+
+    background: #e74c3c;
+    color: white;
+
+    cursor: pointer;
+}
+
+#restart-btn:hover {
+    background: #c0392b;
+}
+
+
+/* =========================
+   HIDDEN CLASS
+========================= */
+
+.hidden {
+    display: none;
+}
+
+
+/* =========================
+   INSTRUCTIONS
+========================= */
+
+.instructions {
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.instructions h2 {
+    margin-bottom: 12px;
+}
+
+.instructions p {
+    margin: 6px;
+    color: #ccc;
+}
+
+
+/* =========================
+   MOBILE RESPONSIVE
+========================= */
+
+@media (max-width: 600px) {
+
+    .game-header h1 {
+        font-size: 22px;
+    }
+
+    .game-stats {
+        gap: 8px;
+        flex-wrap: wrap;
+        font-size: 14px;
+    }
+
+    #game-area {
+        width: 95%;
+        height: 500px;
+    }
+
+    #game-over h2 {
+        font-size: 30px;
+    }
+}
