@@ -434,3 +434,197 @@ setInterval(function() {
 startGame();
 
 gameLoop();
+
+// ================================
+// MOBILE TOUCH CONTROLS
+// ================================
+
+const mobileControls = {
+    up: document.getElementById("up-btn"),
+    down: document.getElementById("down-btn"),
+    left: document.getElementById("left-btn"),
+    right: document.getElementById("right-btn"),
+    fire: document.getElementById("fire-btn")
+};
+
+
+// ================================
+// MOBILE MOVEMENT
+// ================================
+
+function setupMobileButton(button, key) {
+
+    if (!button) return;
+
+    // Touch start
+    button.addEventListener("touchstart", function(event) {
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        keys[key] = true;
+
+    }, { passive: false });
+
+
+    // Touch end
+    button.addEventListener("touchend", function(event) {
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        keys[key] = false;
+
+    }, { passive: false });
+
+
+    // Touch cancelled
+    button.addEventListener("touchcancel", function(event) {
+
+        keys[key] = false;
+
+    });
+
+
+    // Also support mouse
+    button.addEventListener("mousedown", function(event) {
+
+        event.preventDefault();
+
+        keys[key] = true;
+
+    });
+
+
+    button.addEventListener("mouseup", function() {
+
+        keys[key] = false;
+
+    });
+
+
+    button.addEventListener("mouseleave", function() {
+
+        keys[key] = false;
+
+    });
+
+}
+
+
+// Setup movement buttons
+
+setupMobileButton(mobileControls.up, "arrowup");
+setupMobileButton(mobileControls.down, "arrowdown");
+setupMobileButton(mobileControls.left, "arrowleft");
+setupMobileButton(mobileControls.right, "arrowright");
+
+
+// ================================
+// MOBILE FIRE BUTTON
+// ================================
+
+function mobileShoot() {
+
+    if (!gameRunning) return;
+
+    // If there are no zombies, do nothing
+    if (zombies.length === 0) return;
+
+    const playerCenterX =
+        playerX + player.offsetWidth / 2;
+
+    const playerCenterY =
+        playerY + player.offsetHeight / 2;
+
+
+    // Find nearest zombie
+
+    let nearestZombie = null;
+    let nearestDistance = Infinity;
+
+
+    zombies.forEach(function(zombie) {
+
+        const dx = zombie.x - playerCenterX;
+        const dy = zombie.y - playerCenterY;
+
+        const distance = Math.sqrt(dx * dx + dy * dy);
+
+        if (distance < nearestDistance) {
+
+            nearestDistance = distance;
+            nearestZombie = zombie;
+
+        }
+
+    });
+
+
+    if (!nearestZombie) return;
+
+
+    // Direction toward zombie
+
+    const dx = nearestZombie.x - playerCenterX;
+    const dy = nearestZombie.y - playerCenterY;
+
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+
+    if (distance === 0) return;
+
+
+    // Create bullet
+
+    const bullet = document.createElement("div");
+
+    bullet.classList.add("bullet");
+
+    bullet.style.left = playerCenterX + "px";
+    bullet.style.top = playerCenterY + "px";
+
+    gameArea.appendChild(bullet);
+
+
+    bullets.push({
+
+        element: bullet,
+
+        x: playerCenterX,
+
+        y: playerCenterY,
+
+        dx: dx / distance,
+
+        dy: dy / distance
+
+    });
+
+}
+
+
+// Fire button
+
+if (mobileControls.fire) {
+
+    mobileControls.fire.addEventListener("touchstart", function(event) {
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        mobileShoot();
+
+    }, { passive: false });
+
+
+    mobileControls.fire.addEventListener("click", function(event) {
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        mobileShoot();
+
+    });
+
+}
