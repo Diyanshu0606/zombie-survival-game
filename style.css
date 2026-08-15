@@ -246,6 +246,63 @@ body {
         height: 500px;
     }
 
+   /* ================================
+   MOBILE CONTROLS
+================================ */
+
+#mobile-controls {
+    display: none;
+    position: fixed;
+    bottom: 20px;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    pointer-events: none;
+}
+
+.control-row {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin: 8px 0;
+}
+
+.control-btn {
+    width: 65px;
+    height: 65px;
+    border: none;
+    border-radius: 15px;
+    background: rgba(40, 40, 40, 0.85);
+    color: white;
+    font-size: 28px;
+    cursor: pointer;
+    touch-action: none;
+    user-select: none;
+    -webkit-user-select: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+    pointer-events: auto;
+}
+
+.control-btn:active {
+    transform: scale(0.9);
+    background: rgba(80, 80, 80, 0.95);
+}
+
+.fire-btn {
+    background: rgba(180, 30, 30, 0.9);
+}
+
+
+/* Show controls on phones/tablets */
+
+@media (max-width: 768px) {
+
+    #mobile-controls {
+        display: block;
+    }
+
+}
+
     #game-over h2 {
         font-size: 30px;
     }
