@@ -226,74 +226,78 @@ body {
 
 
 /* =========================
-   MOBILE RESPONSIVE
-========================= */
-
-@media (max-width: 600px) {
-
-    .game-header h1 {
-        font-size: 22px;
-    }
-
-    .game-stats {
-        gap: 8px;
-        flex-wrap: wrap;
-        font-size: 14px;
-    }
-
-    #game-area {
-        width: 95%;
-        height: 500px;
-    }
-
-   /* ================================
    MOBILE CONTROLS
-================================ */
+========================= */
 
 #mobile-controls {
     display: none;
+
     position: fixed;
-    bottom: 20px;
+
+    bottom: 15px;
     left: 0;
+
     width: 100%;
+
     z-index: 1000;
+
     pointer-events: none;
 }
 
 .control-row {
     display: flex;
+
     justify-content: center;
-    gap: 15px;
-    margin: 8px 0;
+
+    gap: 12px;
+
+    margin: 7px 0;
 }
 
 .control-btn {
     width: 65px;
     height: 65px;
+
     border: none;
     border-radius: 15px;
-    background: rgba(40, 40, 40, 0.85);
+
+    background: rgba(40, 40, 40, 0.9);
+
     color: white;
+
     font-size: 28px;
+    font-weight: bold;
+
     cursor: pointer;
+
     touch-action: none;
+
     user-select: none;
     -webkit-user-select: none;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+
     pointer-events: auto;
 }
 
 .control-btn:active {
     transform: scale(0.9);
+
     background: rgba(80, 80, 80, 0.95);
 }
 
 .fire-btn {
-    background: rgba(180, 30, 30, 0.9);
+    background: rgba(190, 40, 40, 0.95);
+}
+
+.fire-btn:active {
+    background: rgba(230, 60, 60, 1);
 }
 
 
-/* Show controls on phones/tablets */
+/* =========================
+   MOBILE / TABLET
+========================= */
 
 @media (max-width: 768px) {
 
@@ -303,7 +307,114 @@ body {
 
 }
 
+
+/* =========================
+   SMALL PHONE
+========================= */
+
+@media (max-width: 600px) {
+
+    .game-header {
+        padding: 10px;
+    }
+
+    .game-header h1 {
+        font-size: 22px;
+        margin-bottom: 8px;
+    }
+
+    .game-stats {
+        gap: 8px;
+
+        flex-wrap: wrap;
+
+        font-size: 14px;
+    }
+
+    .game-stats span {
+        padding: 6px 8px;
+    }
+
+    #game-area {
+        width: 95%;
+
+        height: 500px;
+
+        margin: 15px auto;
+    }
+
+    #player {
+        width: 42px;
+        height: 42px;
+
+        font-size: 28px;
+    }
+
+    .zombie {
+        width: 42px;
+        height: 42px;
+
+        font-size: 28px;
+    }
+
+    #game-over {
+        width: 90%;
+
+        padding: 30px 15px;
+    }
+
     #game-over h2 {
         font-size: 30px;
     }
+
+    #game-over p {
+        font-size: 18px;
+    }
+
+    #restart-btn {
+        font-size: 16px;
+
+        padding: 10px 20px;
+    }
+
+    .instructions {
+        padding: 15px;
+    }
+
+    .instructions p {
+        font-size: 14px;
+    }
+
+    .control-btn {
+        width: 60px;
+        height: 60px;
+
+        font-size: 25px;
+    }
+
+    .control-row {
+        gap: 10px;
+        margin: 5px 0;
+    }
+
+}
+
+
+/* =========================
+   VERY SMALL PHONES
+========================= */
+
+@media (max-width: 380px) {
+
+    #game-area {
+        height: 450px;
+    }
+
+    .control-btn {
+        width: 55px;
+        height: 55px;
+
+        font-size: 22px;
+    }
+
 }
