@@ -12,120 +12,357 @@
 
 <body>
 
-    <!-- Game Header -->
-    <header class="game-header">
 
-        <h1>🧟 Zombie Survival</h1>
+    <!-- =========================
+         MAIN MENU
+    ========================== -->
 
-        <div class="game-stats">
+    <div id="main-menu">
 
-            <span>
-                ❤️ Health:
-                <strong id="health">100</strong>
-            </span>
+        <div class="menu-content">
 
-            <span>
-                🎯 Score:
-                <strong id="score">0</strong>
-            </span>
+            <h1>🧟 Zombie Survival</h1>
 
-            <span>
-                💀 Zombies:
-                <strong id="zombies">0</strong>
-            </span>
-
-            <!-- Pause Button -->
-            <button id="pause-btn">
-                ⏸️ Pause Game
-            </button>
-
-        </div>
-
-    </header>
-
-
-    <!-- Main Game Area -->
-    <main>
-
-        <div id="game-area">
-
-            <!-- Player -->
-            <div id="player">
-                🔫
-            </div>
-
-        </div>
-
-
-        <!-- Pause Screen -->
-        <div id="pause-screen" class="hidden">
-
-            <h2>⏸️ GAME PAUSED</h2>
-
-            <p>
-                The game is currently paused.
+            <p class="menu-subtitle">
+                Survive the zombie attack!
             </p>
 
-            <button id="resume-btn">
-                ▶️ Resume Game
+            <button id="start-game-btn">
+                🎮 Start Game
+            </button>
+
+            <button id="levels-btn">
+                🎯 Levels
+            </button>
+
+            <button id="how-to-play-btn">
+                ❓ How to Play
             </button>
 
         </div>
-
-
-        <!-- Game Over Screen -->
-        <div id="game-over" class="hidden">
-
-            <h2>💀 GAME OVER</h2>
-
-            <p>
-                Your Score:
-                <strong id="final-score">0</strong>
-            </p>
-
-            <button id="restart-btn">
-                🔄 Restart Game
-            </button>
-
-        </div>
-
-    </main>
-
-
-    <!-- Game Instructions -->
-    <section class="instructions">
-
-        <h2>How to Play</h2>
-
-        <p>
-            🎮 Use <strong>W A S D</strong> or
-            <strong>Arrow Keys</strong> to move.
-        </p>
-
-        <p>
-            🖱️ Click to shoot zombies.
-        </p>
-
-        <p>
-            🧟 Survive as long as possible!
-        </p>
-
-        <p>
-            ⏸️ Click <strong>Pause Game</strong> to pause the game.
-        </p>
-
-    </section>
-
-
-    <!-- Mobile Controls -->
-    <div id="mobile-controls">
-
-        <!-- Mobile buttons will be added here later -->
 
     </div>
 
 
-    <!-- JavaScript - include only once -->
+    <!-- =========================
+         LEVEL SELECT MENU
+    ========================== -->
+
+    <div id="level-menu" class="hidden">
+
+        <div class="menu-content">
+
+            <h2>🎯 Select Level</h2>
+
+            <p class="menu-subtitle">
+                Choose your level
+            </p>
+
+
+            <button class="level-btn" data-level="1">
+
+                🌲 Level 1
+
+                <small>
+                    The Beginning
+                </small>
+
+            </button>
+
+
+            <button class="level-btn" data-level="2">
+
+                🌆 Level 2
+
+                <small>
+                    City Attack
+                </small>
+
+            </button>
+
+
+            <button class="level-btn" data-level="3">
+
+                🏭 Level 3
+
+                <small>
+                    Zombie Factory
+                </small>
+
+            </button>
+
+
+            <button class="level-btn" data-level="4">
+
+                🌑 Level 4
+
+                <small>
+                    Night Hunt
+                </small>
+
+            </button>
+
+
+            <button class="level-btn" data-level="5">
+
+                👑 Level 5
+
+                <small>
+                    Zombie Apocalypse
+                </small>
+
+            </button>
+
+
+            <button id="back-menu-btn">
+                ⬅️ Back
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         HOW TO PLAY MENU
+    ========================== -->
+
+    <div id="instructions-menu" class="hidden">
+
+        <div class="menu-content">
+
+            <h2>❓ How to Play</h2>
+
+
+            <p>
+                🎮 Use
+                <strong>W A S D</strong>
+                or
+                <strong>Arrow Keys</strong>
+                to move.
+            </p>
+
+
+            <p>
+                🖱️ Click inside the game to shoot.
+            </p>
+
+
+            <p>
+                🧟 Zombies will chase you.
+            </p>
+
+
+            <p>
+                ❤️ Don't let your health reach zero.
+            </p>
+
+
+            <p>
+                🎯 Shoot zombies to increase your score.
+            </p>
+
+
+            <p>
+                ⏸️ Use Pause to stop the game.
+            </p>
+
+
+            <button id="back-instructions-btn">
+                ⬅️ Back
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         GAME CONTAINER
+    ========================== -->
+
+    <div id="game-container" class="hidden">
+
+
+        <!-- =========================
+             GAME HEADER
+        ========================== -->
+
+        <header class="game-header">
+
+            <h1>
+                🧟 Zombie Survival
+            </h1>
+
+
+            <div class="game-stats">
+
+
+                <span>
+                    ❤️ Health:
+                    <strong id="health">100</strong>
+                </span>
+
+
+                <span>
+                    🎯 Score:
+                    <strong id="score">0</strong>
+                </span>
+
+
+                <span>
+                    💀 Zombies:
+                    <strong id="zombies">0</strong>
+                </span>
+
+
+                <!-- Current Level -->
+
+                <span>
+                    🎯 Level:
+                    <strong id="current-level">1</strong>
+                </span>
+
+
+                <!-- Pause Button -->
+
+                <button id="pause-btn">
+                    ⏸️ Pause Game
+                </button>
+
+
+            </div>
+
+        </header>
+
+
+        <!-- =========================
+             MAIN GAME AREA
+        ========================== -->
+
+        <main>
+
+            <div id="game-area">
+
+                <!-- Player -->
+
+                <div id="player">
+                    🔫
+                </div>
+
+            </div>
+
+
+            <!-- =========================
+                 PAUSE SCREEN
+            ========================== -->
+
+            <div id="pause-screen" class="hidden">
+
+                <h2>
+                    ⏸️ GAME PAUSED
+                </h2>
+
+
+                <p>
+                    The game is currently paused.
+                </p>
+
+
+                <button id="resume-btn">
+                    ▶️ Resume Game
+                </button>
+
+            </div>
+
+
+            <!-- =========================
+                 GAME OVER SCREEN
+            ========================== -->
+
+            <div id="game-over" class="hidden">
+
+                <h2>
+                    💀 GAME OVER
+                </h2>
+
+
+                <p>
+                    Your Score:
+                    <strong id="final-score">0</strong>
+                </p>
+
+
+                <button id="restart-btn">
+                    🔄 Restart Game
+                </button>
+
+
+                <button id="menu-btn">
+                    🏠 Main Menu
+                </button>
+
+            </div>
+
+        </main>
+
+
+        <!-- =========================
+             GAME INSTRUCTIONS
+        ========================== -->
+
+        <section class="instructions">
+
+            <h2>
+                How to Play
+            </h2>
+
+
+            <p>
+                🎮 Use
+                <strong>W A S D</strong>
+                or
+                <strong>Arrow Keys</strong>
+                to move.
+            </p>
+
+
+            <p>
+                🖱️ Click to shoot zombies.
+            </p>
+
+
+            <p>
+                🧟 Survive as long as possible!
+            </p>
+
+
+            <p>
+                ⏸️ Click
+                <strong>Pause Game</strong>
+                to pause the game.
+            </p>
+
+        </section>
+
+
+        <!-- =========================
+             MOBILE CONTROLS
+        ========================== -->
+
+        <div id="mobile-controls">
+
+            <!-- Mobile buttons will be added later -->
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================
+         JAVASCRIPT
+    ========================== -->
+
     <script src="game.js"></script>
 
 </body>
