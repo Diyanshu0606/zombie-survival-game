@@ -2,7 +2,11 @@
 // ZOMBIE SURVIVAL GAME
 // ================================
 
-// Get HTML elements
+
+// ================================
+// GET HTML ELEMENTS
+// ================================
+
 const gameArea = document.getElementById("game-area");
 const player = document.getElementById("player");
 
@@ -13,6 +17,11 @@ const zombiesDisplay = document.getElementById("zombies");
 const gameOverScreen = document.getElementById("game-over");
 const finalScoreDisplay = document.getElementById("final-score");
 const restartButton = document.getElementById("restart-btn");
+
+// Pause elements
+const pauseButton = document.getElementById("pause-btn");
+const pauseScreen = document.getElementById("pause-screen");
+const resumeButton = document.getElementById("resume-btn");
 
 
 // ================================
@@ -32,6 +41,9 @@ let keys = {};
 
 let gameRunning = true;
 
+// NEW: Pause variable
+let isPaused = false;
+
 let playerSpeed = 5;
 let zombieSpeed = 1;
 
@@ -41,8 +53,10 @@ let zombieSpeed = 1;
 // ================================
 
 function setPlayerPosition() {
+
     player.style.left = playerX + "px";
     player.style.top = playerY + "px";
+
 }
 
 
@@ -63,24 +77,128 @@ function startGame() {
 
     gameRunning = true;
 
+    // NEW: Make sure game starts unpaused
+    isPaused = false;
+
     healthDisplay.textContent = health;
     scoreDisplay.textContent = score;
 
     gameOverScreen.classList.add("hidden");
+
+    // Hide pause screen
+    if (pauseScreen) {
+        pauseScreen.classList.add("hidden");
+    }
+
+    // Reset pause button
+    if (pauseButton) {
+        pauseButton.textContent = "⏸️ Pause Game";
+    }
+
 
     // Remove old zombies
     document.querySelectorAll(".zombie").forEach(zombie => {
         zombie.remove();
     });
 
+
     // Remove old bullets
     document.querySelectorAll(".bullet").forEach(bullet => {
         bullet.remove();
     });
 
+
     setPlayerPosition();
 
     updateZombieCount();
+
+}
+
+
+// ================================
+// PAUSE GAME
+// ================================
+
+function pauseGame() {
+
+    // Don't pause if game is already over
+    if (!gameRunning) return;
+
+    // Don't pause twice
+    if (isPaused) return;
+
+    isPaused = true;
+
+    // Show pause screen
+    if (pauseScreen) {
+        pauseScreen.classList.remove("hidden");
+    }
+
+    // Change button text
+    if (pauseButton) {
+        pauseButton.textContent = "▶️ Resume Game";
+    }
+
+}
+
+
+// ================================
+// RESUME GAME
+// ================================
+
+function resumeGame() {
+
+    // Don't resume if game is over
+    if (!gameRunning) return;
+
+    if (!isPaused) return;
+
+    isPaused = false;
+
+    // Hide pause screen
+    if (pauseScreen) {
+        pauseScreen.classList.add("hidden");
+    }
+
+    // Change button text
+    if (pauseButton) {
+        pauseButton.textContent = "⏸️ Pause Game";
+    }
+
+}
+
+
+// ================================
+// PAUSE BUTTON
+// ================================
+
+if (pauseButton) {
+
+    pauseButton.addEventListener("click", function() {
+
+        if (isPaused) {
+            resumeGame();
+        } else {
+            pauseGame();
+        }
+
+    });
+
+}
+
+
+// ================================
+// RESUME BUTTON
+// ================================
+
+if (resumeButton) {
+
+    resumeButton.addEventListener("click", function() {
+
+        resumeGame();
+
+    });
+
 }
 
 
@@ -90,7 +208,29 @@ function startGame() {
 
 document.addEventListener("keydown", function(event) {
 
-    keys[event.key.toLowerCase()] = true;
+    const key = event.key.toLowerCase();
+
+    // Press P to pause/resume
+    if (key === "p") {
+
+        if (gameRunning) {
+
+            if (isPaused) {
+                resumeGame();
+            } else {
+                pauseGame();
+            }
+
+        }
+
+        return;
+    }
+
+
+    // Don't add movement keys while paused
+    if (isPaused) return;
+
+    keys[key] = true;
 
 });
 
@@ -108,22 +248,27 @@ document.addEventListener("keyup", function(event) {
 
 function movePlayer() {
 
-    if (!gameRunning) return;
+    // NEW: Stop movement when paused
+    if (!gameRunning || isPaused) return;
+
 
     // W or Arrow Up
     if (keys["w"] || keys["arrowup"]) {
         playerY -= playerSpeed;
     }
 
+
     // S or Arrow Down
     if (keys["s"] || keys["arrowdown"]) {
         playerY += playerSpeed;
     }
 
+
     // A or Arrow Left
     if (keys["a"] || keys["arrowleft"]) {
         playerX -= playerSpeed;
     }
+
 
     // D or Arrow Right
     if (keys["d"] || keys["arrowright"]) {
@@ -140,6 +285,7 @@ function movePlayer() {
     playerY = Math.max(0, Math.min(playerY, maxY));
 
     setPlayerPosition();
+
 }
 
 
@@ -149,7 +295,9 @@ function movePlayer() {
 
 function createZombie() {
 
-    if (!gameRunning) return;
+    // NEW: Don't create zombies while paused
+    if (!gameRunning || isPaused) return;
+
 
     const zombie = document.createElement("div");
 
@@ -157,34 +305,44 @@ function createZombie() {
 
     zombie.textContent = "🧟";
 
+
     // Choose random side
     const side = Math.floor(Math.random() * 4);
 
     let x;
     let y;
 
+
     if (side === 0) {
+
         // Top
         x = Math.random() * gameArea.clientWidth;
         y = 0;
+
     }
 
     else if (side === 1) {
+
         // Right
         x = gameArea.clientWidth - 45;
         y = Math.random() * gameArea.clientHeight;
+
     }
 
     else if (side === 2) {
+
         // Bottom
         x = Math.random() * gameArea.clientWidth;
         y = gameArea.clientHeight - 45;
+
     }
 
     else {
+
         // Left
         x = 0;
         y = Math.random() * gameArea.clientHeight;
+
     }
 
 
@@ -193,13 +351,18 @@ function createZombie() {
 
     gameArea.appendChild(zombie);
 
+
     zombies.push({
+
         element: zombie,
         x: x,
         y: y
+
     });
 
+
     updateZombieCount();
+
 }
 
 
@@ -209,7 +372,9 @@ function createZombie() {
 
 function moveZombies() {
 
-    if (!gameRunning) return;
+    // NEW: Stop zombies while paused
+    if (!gameRunning || isPaused) return;
+
 
     zombies.forEach((zombie, index) => {
 
@@ -218,12 +383,14 @@ function moveZombies() {
 
         const distance = Math.sqrt(dx * dx + dy * dy);
 
+
         if (distance > 0) {
 
             zombie.x += (dx / distance) * zombieSpeed;
             zombie.y += (dy / distance) * zombieSpeed;
 
         }
+
 
         zombie.element.style.left = zombie.x + "px";
         zombie.element.style.top = zombie.y + "px";
@@ -234,10 +401,14 @@ function moveZombies() {
 
             health -= 0.5;
 
-            healthDisplay.textContent = Math.max(0, Math.floor(health));
+            healthDisplay.textContent =
+                Math.max(0, Math.floor(health));
+
 
             if (health <= 0) {
+
                 endGame();
+
             }
 
         }
@@ -253,22 +424,33 @@ function moveZombies() {
 
 gameArea.addEventListener("click", function(event) {
 
-    if (!gameRunning) return;
+    // NEW: Can't shoot while paused
+    if (!gameRunning || isPaused) return;
+
 
     const rect = gameArea.getBoundingClientRect();
 
     const targetX = event.clientX - rect.left;
     const targetY = event.clientY - rect.top;
 
-    const playerCenterX = playerX + player.offsetWidth / 2;
-    const playerCenterY = playerY + player.offsetHeight / 2;
+
+    const playerCenterX =
+        playerX + player.offsetWidth / 2;
+
+    const playerCenterY =
+        playerY + player.offsetHeight / 2;
+
 
     const dx = targetX - playerCenterX;
     const dy = targetY - playerCenterY;
 
-    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    const distance =
+        Math.sqrt(dx * dx + dy * dy);
+
 
     if (distance === 0) return;
+
 
     const bullet = document.createElement("div");
 
@@ -279,12 +461,17 @@ gameArea.addEventListener("click", function(event) {
 
     gameArea.appendChild(bullet);
 
+
     bullets.push({
+
         element: bullet,
+
         x: playerCenterX,
         y: playerCenterY,
+
         dx: dx / distance,
         dy: dy / distance
+
     });
 
 });
@@ -296,18 +483,25 @@ gameArea.addEventListener("click", function(event) {
 
 function moveBullets() {
 
-    if (!gameRunning) return;
+    // NEW: Stop bullets while paused
+    if (!gameRunning || isPaused) return;
+
 
     bullets.forEach((bullet, bulletIndex) => {
 
         bullet.x += bullet.dx * 10;
         bullet.y += bullet.dy * 10;
 
-        bullet.element.style.left = bullet.x + "px";
-        bullet.element.style.top = bullet.y + "px";
+
+        bullet.element.style.left =
+            bullet.x + "px";
+
+        bullet.element.style.top =
+            bullet.y + "px";
 
 
         // Remove bullet outside game
+
         if (
             bullet.x < 0 ||
             bullet.x > gameArea.clientWidth ||
@@ -320,15 +514,26 @@ function moveBullets() {
             bullets.splice(bulletIndex, 1);
 
             return;
+
         }
 
 
         // Check collision with zombies
+
         zombies.forEach((zombie, zombieIndex) => {
 
             const distance = Math.sqrt(
-                Math.pow(bullet.x - zombie.x - 22, 2) +
-                Math.pow(bullet.y - zombie.y - 22, 2)
+
+                Math.pow(
+                    bullet.x - zombie.x - 22,
+                    2
+                ) +
+
+                Math.pow(
+                    bullet.y - zombie.y - 22,
+                    2
+                )
+
             );
 
 
@@ -339,10 +544,12 @@ function moveBullets() {
 
                 zombies.splice(zombieIndex, 1);
 
+
                 // Remove bullet
                 bullet.element.remove();
 
                 bullets.splice(bulletIndex, 1);
+
 
                 // Increase score
                 score += 10;
@@ -366,7 +573,8 @@ function moveBullets() {
 
 function updateZombieCount() {
 
-    zombiesDisplay.textContent = zombies.length;
+    zombiesDisplay.textContent =
+        zombies.length;
 
 }
 
@@ -378,6 +586,15 @@ function updateZombieCount() {
 function endGame() {
 
     gameRunning = false;
+
+    // NEW: Remove pause state
+    isPaused = false;
+
+    // Hide pause screen
+    if (pauseScreen) {
+        pauseScreen.classList.add("hidden");
+    }
+
 
     finalScoreDisplay.textContent = score;
 
@@ -420,8 +637,11 @@ function gameLoop() {
 
 setInterval(function() {
 
-    if (gameRunning) {
+    // Zombies will NOT spawn while paused
+    if (gameRunning && !isPaused) {
+
         createZombie();
+
     }
 
 }, 1500);
@@ -435,16 +655,19 @@ startGame();
 
 gameLoop();
 
+
 // ================================
 // MOBILE TOUCH CONTROLS
 // ================================
 
 const mobileControls = {
+
     up: document.getElementById("up-btn"),
     down: document.getElementById("down-btn"),
     left: document.getElementById("left-btn"),
     right: document.getElementById("right-btn"),
     fire: document.getElementById("fire-btn")
+
 };
 
 
@@ -456,11 +679,15 @@ function setupMobileButton(button, key) {
 
     if (!button) return;
 
+
     // Touch start
     button.addEventListener("touchstart", function(event) {
 
         event.preventDefault();
         event.stopPropagation();
+
+        // Don't move while paused
+        if (isPaused || !gameRunning) return;
 
         keys[key] = true;
 
@@ -491,6 +718,9 @@ function setupMobileButton(button, key) {
 
         event.preventDefault();
 
+        // Don't move while paused
+        if (isPaused || !gameRunning) return;
+
         keys[key] = true;
 
     });
@@ -514,10 +744,25 @@ function setupMobileButton(button, key) {
 
 // Setup movement buttons
 
-setupMobileButton(mobileControls.up, "arrowup");
-setupMobileButton(mobileControls.down, "arrowdown");
-setupMobileButton(mobileControls.left, "arrowleft");
-setupMobileButton(mobileControls.right, "arrowright");
+setupMobileButton(
+    mobileControls.up,
+    "arrowup"
+);
+
+setupMobileButton(
+    mobileControls.down,
+    "arrowdown"
+);
+
+setupMobileButton(
+    mobileControls.left,
+    "arrowleft"
+);
+
+setupMobileButton(
+    mobileControls.right,
+    "arrowright"
+);
 
 
 // ================================
@@ -526,10 +771,13 @@ setupMobileButton(mobileControls.right, "arrowright");
 
 function mobileShoot() {
 
-    if (!gameRunning) return;
+    // NEW: Can't shoot while paused
+    if (!gameRunning || isPaused) return;
+
 
     // If there are no zombies, do nothing
     if (zombies.length === 0) return;
+
 
     const playerCenterX =
         playerX + player.offsetWidth / 2;
@@ -546,10 +794,16 @@ function mobileShoot() {
 
     zombies.forEach(function(zombie) {
 
-        const dx = zombie.x - playerCenterX;
-        const dy = zombie.y - playerCenterY;
+        const dx =
+            zombie.x - playerCenterX;
 
-        const distance = Math.sqrt(dx * dx + dy * dy);
+        const dy =
+            zombie.y - playerCenterY;
+
+
+        const distance =
+            Math.sqrt(dx * dx + dy * dy);
+
 
         if (distance < nearestDistance) {
 
@@ -566,10 +820,15 @@ function mobileShoot() {
 
     // Direction toward zombie
 
-    const dx = nearestZombie.x - playerCenterX;
-    const dy = nearestZombie.y - playerCenterY;
+    const dx =
+        nearestZombie.x - playerCenterX;
 
-    const distance = Math.sqrt(dx * dx + dy * dy);
+    const dy =
+        nearestZombie.y - playerCenterY;
+
+
+    const distance =
+        Math.sqrt(dx * dx + dy * dy);
 
 
     if (distance === 0) return;
@@ -577,12 +836,17 @@ function mobileShoot() {
 
     // Create bullet
 
-    const bullet = document.createElement("div");
+    const bullet =
+        document.createElement("div");
 
     bullet.classList.add("bullet");
 
-    bullet.style.left = playerCenterX + "px";
-    bullet.style.top = playerCenterY + "px";
+    bullet.style.left =
+        playerCenterX + "px";
+
+    bullet.style.top =
+        playerCenterY + "px";
+
 
     gameArea.appendChild(bullet);
 
@@ -604,27 +868,40 @@ function mobileShoot() {
 }
 
 
-// Fire button
+// ================================
+// MOBILE FIRE BUTTON
+// ================================
 
 if (mobileControls.fire) {
 
-    mobileControls.fire.addEventListener("touchstart", function(event) {
+    mobileControls.fire.addEventListener(
+        "touchstart",
+        function(event) {
 
-        event.preventDefault();
-        event.stopPropagation();
+            event.preventDefault();
+            event.stopPropagation();
 
-        mobileShoot();
+            if (!isPaused) {
+                mobileShoot();
+            }
 
-    }, { passive: false });
+        },
+        { passive: false }
+    );
 
 
-    mobileControls.fire.addEventListener("click", function(event) {
+    mobileControls.fire.addEventListener(
+        "click",
+        function(event) {
 
-        event.preventDefault();
-        event.stopPropagation();
+            event.preventDefault();
+            event.stopPropagation();
 
-        mobileShoot();
+            if (!isPaused) {
+                mobileShoot();
+            }
 
-    });
+        }
+    );
 
 }
