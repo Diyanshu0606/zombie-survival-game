@@ -35,14 +35,47 @@ body {
 .game-stats {
     display: flex;
     justify-content: center;
+    align-items: center;
     gap: 30px;
     font-size: 18px;
+    flex-wrap: wrap;
 }
 
 .game-stats span {
     background: #292929;
     padding: 8px 15px;
     border-radius: 8px;
+}
+
+
+/* =========================
+   PAUSE BUTTON
+========================= */
+
+#pause-btn {
+    padding: 8px 15px;
+
+    font-size: 16px;
+    font-weight: bold;
+
+    border: none;
+    border-radius: 8px;
+
+    background: #f39c12;
+    color: white;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+#pause-btn:hover {
+    background: #d68910;
+    transform: scale(1.05);
+}
+
+#pause-btn:active {
+    transform: scale(0.95);
 }
 
 
@@ -141,6 +174,76 @@ body {
 
 
 /* =========================
+   PAUSE SCREEN
+========================= */
+
+#pause-screen {
+    position: fixed;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    width: 90%;
+    max-width: 450px;
+
+    padding: 40px;
+
+    background: rgba(20, 20, 20, 0.97);
+
+    border: 3px solid #f39c12;
+    border-radius: 15px;
+
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+
+    z-index: 200;
+}
+
+#pause-screen h2 {
+    font-size: 40px;
+    margin-bottom: 15px;
+}
+
+#pause-screen p {
+    font-size: 18px;
+    color: #ccc;
+    margin-bottom: 25px;
+}
+
+
+/* =========================
+   RESUME BUTTON
+========================= */
+
+#resume-btn {
+    padding: 12px 25px;
+
+    font-size: 18px;
+    font-weight: bold;
+
+    border: none;
+    border-radius: 8px;
+
+    background: #2ecc71;
+    color: white;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+#resume-btn:hover {
+    background: #27ae60;
+    transform: scale(1.05);
+}
+
+#resume-btn:active {
+    transform: scale(0.95);
+}
+
+
+/* =========================
    GAME OVER
 ========================= */
 
@@ -202,7 +305,7 @@ body {
 ========================= */
 
 .hidden {
-    display: none;
+    display: none !important;
 }
 
 
@@ -305,6 +408,19 @@ body {
         display: block;
     }
 
+    #pause-btn {
+        font-size: 14px;
+        padding: 7px 12px;
+    }
+
+    #pause-screen {
+        padding: 30px 20px;
+    }
+
+    #pause-screen h2 {
+        font-size: 32px;
+    }
+
 }
 
 
@@ -325,9 +441,7 @@ body {
 
     .game-stats {
         gap: 8px;
-
         flex-wrap: wrap;
-
         font-size: 14px;
     }
 
@@ -335,31 +449,50 @@ body {
         padding: 6px 8px;
     }
 
+    #pause-btn {
+        width: 100%;
+        max-width: 180px;
+        padding: 8px 10px;
+    }
+
     #game-area {
         width: 95%;
-
         height: 500px;
-
         margin: 15px auto;
     }
 
     #player {
         width: 42px;
         height: 42px;
-
         font-size: 28px;
     }
 
     .zombie {
         width: 42px;
         height: 42px;
-
         font-size: 28px;
+    }
+
+    #pause-screen {
+        width: 90%;
+        padding: 30px 15px;
+    }
+
+    #pause-screen h2 {
+        font-size: 30px;
+    }
+
+    #pause-screen p {
+        font-size: 16px;
+    }
+
+    #resume-btn {
+        font-size: 16px;
+        padding: 10px 20px;
     }
 
     #game-over {
         width: 90%;
-
         padding: 30px 15px;
     }
 
@@ -373,7 +506,6 @@ body {
 
     #restart-btn {
         font-size: 16px;
-
         padding: 10px 20px;
     }
 
@@ -388,7 +520,6 @@ body {
     .control-btn {
         width: 60px;
         height: 60px;
-
         font-size: 25px;
     }
 
@@ -413,8 +544,11 @@ body {
     .control-btn {
         width: 55px;
         height: 55px;
-
         font-size: 22px;
+    }
+
+    #pause-screen h2 {
+        font-size: 26px;
     }
 
 }
