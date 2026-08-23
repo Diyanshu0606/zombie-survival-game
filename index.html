@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,14 +14,35 @@
 
     <!-- Game Header -->
     <header class="game-header">
+
         <h1>🧟 Zombie Survival</h1>
 
         <div class="game-stats">
-            <span>❤️ Health: <strong id="health">100</strong></span>
-            <span>🎯 Score: <strong id="score">0</strong></span>
-            <span>💀 Zombies: <strong id="zombies">0</strong></span>
+
+            <span>
+                ❤️ Health:
+                <strong id="health">100</strong>
+            </span>
+
+            <span>
+                🎯 Score:
+                <strong id="score">0</strong>
+            </span>
+
+            <span>
+                💀 Zombies:
+                <strong id="zombies">0</strong>
+            </span>
+
+            <!-- Pause Button -->
+            <button id="pause-btn">
+                ⏸️ Pause Game
+            </button>
+
         </div>
+
     </header>
+
 
     <!-- Main Game Area -->
     <main>
@@ -34,8 +56,26 @@
 
         </div>
 
+
+        <!-- Pause Screen -->
+        <div id="pause-screen" class="hidden">
+
+            <h2>⏸️ GAME PAUSED</h2>
+
+            <p>
+                The game is currently paused.
+            </p>
+
+            <button id="resume-btn">
+                ▶️ Resume Game
+            </button>
+
+        </div>
+
+
         <!-- Game Over Screen -->
         <div id="game-over" class="hidden">
+
             <h2>💀 GAME OVER</h2>
 
             <p>
@@ -46,26 +86,48 @@
             <button id="restart-btn">
                 🔄 Restart Game
             </button>
+
         </div>
 
     </main>
 
+
     <!-- Game Instructions -->
     <section class="instructions">
+
         <h2>How to Play</h2>
 
-        <p>🎮 Use <strong>W A S D</strong> or <strong>Arrow Keys</strong> to move.</p>
-        <p>🖱️ Click to shoot zombies.</p>
-        <p>🧟 Survive as long as possible!</p>
+        <p>
+            🎮 Use <strong>W A S D</strong> or
+            <strong>Arrow Keys</strong> to move.
+        </p>
+
+        <p>
+            🖱️ Click to shoot zombies.
+        </p>
+
+        <p>
+            🧟 Survive as long as possible!
+        </p>
+
+        <p>
+            ⏸️ Click <strong>Pause Game</strong> to pause the game.
+        </p>
+
     </section>
+
 
     <!-- Mobile Controls -->
     <div id="mobile-controls">
+
         <!-- Mobile buttons will be added here later -->
+
     </div>
+
 
     <!-- JavaScript - include only once -->
     <script src="game.js"></script>
 
 </body>
+
 </html>
