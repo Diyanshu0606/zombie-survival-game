@@ -1,96 +1,312 @@
-// ================================
-// ZOMBIE SURVIVAL GAME
-// ================================
+/* =========================================================
+   ZOMBIE SURVIVAL GAME
+   Main Menu + Levels + Pause + Game Over
+========================================================= */
 
-// Get HTML elements
+
+/* =========================================================
+   GAME ELEMENTS
+========================================================= */
+
+const mainMenu = document.getElementById("main-menu");
+const levelMenu = document.getElementById("level-menu");
+const instructionsMenu = document.getElementById("instructions-menu");
+
+const gameContainer = document.getElementById("game-container");
+
 const gameArea = document.getElementById("game-area");
 const player = document.getElementById("player");
 
 const healthDisplay = document.getElementById("health");
 const scoreDisplay = document.getElementById("score");
 const zombiesDisplay = document.getElementById("zombies");
+const levelDisplay = document.getElementById("current-level");
+
+const pauseBtn = document.getElementById("pause-btn");
+const pauseScreen = document.getElementById("pause-screen");
+const resumeBtn = document.getElementById("resume-btn");
 
 const gameOverScreen = document.getElementById("game-over");
 const finalScoreDisplay = document.getElementById("final-score");
-const restartButton = document.getElementById("restart-btn");
+
+const restartBtn = document.getElementById("restart-btn");
+const menuBtn = document.getElementById("menu-btn");
+
+const startGameBtn = document.getElementById("start-game-btn");
+const levelsBtn = document.getElementById("levels-btn");
+const howToPlayBtn = document.getElementById("how-to-play-btn");
+
+const backMenuBtn = document.getElementById("back-menu-btn");
+const backInstructionsBtn =
+    document.getElementById("back-instructions-btn");
+
+const levelButtons =
+    document.querySelectorAll(".level-btn");
 
 
-// ================================
-// GAME VARIABLES
-// ================================
-
-let playerX = 0;
-let playerY = 0;
+/* =========================================================
+   GAME VARIABLES
+========================================================= */
 
 let health = 100;
 let score = 0;
+
+let currentLevel = 1;
+
+let gameRunning = false;
+let gamePaused = false;
+let gameOver = false;
 
 let zombies = [];
 let bullets = [];
 
 let keys = {};
 
-let gameRunning = true;
+let playerX = 0;
+let playerY = 0;
 
-let playerSpeed = 5;
-let zombieSpeed = 1;
+let gameLoopId = null;
+
+let zombieSpawnTimer = null;
 
 
-// ================================
-// PLAYER POSITION
-// ================================
+/* =========================================================
+   LEVEL SETTINGS
+========================================================= */
 
-function setPlayerPosition() {
-    player.style.left = playerX + "px";
-    player.style.top = playerY + "px";
+const levelSettings = {
+
+    1: {
+        zombieSpeed: 0.7,
+        spawnTime: 1800,
+        maxZombies: 5,
+        zombiesToNext: 10
+    },
+
+    2: {
+        zombieSpeed: 1.0,
+        spawnTime: 1500,
+        maxZombies: 7,
+        zombiesToNext: 15
+    },
+
+    3: {
+        zombieSpeed: 1.3,
+        spawnTime: 1200,
+        maxZombies: 9,
+        zombiesToNext: 20
+    },
+
+    4: {
+        zombieSpeed: 1.6,
+        spawnTime: 950,
+        maxZombies: 12,
+        zombiesToNext: 25
+    },
+
+    5: {
+        zombieSpeed: 2.0,
+        spawnTime: 750,
+        maxZombies: 15,
+        zombiesToNext: 999999
+    }
+
+};
+
+
+/* =========================================================
+   MAIN MENU
+========================================================= */
+
+function showMainMenu() {
+
+    stopGame();
+
+    mainMenu.classList.remove("hidden");
+
+    levelMenu.classList.add("hidden");
+
+    instructionsMenu.classList.add("hidden");
+
+    gameContainer.classList.add("hidden");
+
 }
 
 
-// ================================
-// START GAME
-// ================================
+/* =========================================================
+   LEVEL MENU
+========================================================= */
 
-function startGame() {
+function showLevelMenu() {
 
-    playerX = gameArea.clientWidth / 2 - 22;
-    playerY = gameArea.clientHeight / 2 - 22;
+    mainMenu.classList.add("hidden");
+
+    levelMenu.classList.remove("hidden");
+
+    instructionsMenu.classList.add("hidden");
+
+    gameContainer.classList.add("hidden");
+
+}
+
+
+/* =========================================================
+   HOW TO PLAY MENU
+========================================================= */
+
+function showInstructions() {
+
+    mainMenu.classList.add("hidden");
+
+    levelMenu.classList.add("hidden");
+
+    instructionsMenu.classList.remove("hidden");
+
+    gameContainer.classList.add("hidden");
+
+}
+
+
+/* =========================================================
+   START GAME
+========================================================= */
+
+function startGame(level = 1) {
+
+    currentLevel = level;
 
     health = 100;
+
     score = 0;
 
-    zombies = [];
-    bullets = [];
+    gameOver = false;
+
+    gamePaused = false;
 
     gameRunning = true;
 
-    healthDisplay.textContent = health;
-    scoreDisplay.textContent = score;
+    clearZombies();
+
+    clearBullets();
+
+    mainMenu.classList.add("hidden");
+
+    levelMenu.classList.add("hidden");
+
+    instructionsMenu.classList.add("hidden");
+
+    gameContainer.classList.remove("hidden");
+
+    pauseScreen.classList.add("hidden");
 
     gameOverScreen.classList.add("hidden");
 
-    // Remove old zombies
-    document.querySelectorAll(".zombie").forEach(zombie => {
-        zombie.remove();
-    });
+    updateDisplays();
 
-    // Remove old bullets
-    document.querySelectorAll(".bullet").forEach(bullet => {
-        bullet.remove();
-    });
+    resetPlayerPosition();
 
-    setPlayerPosition();
+    startZombieSpawner();
 
-    updateZombieCount();
+    startGameLoop();
+
 }
 
 
-// ================================
-// KEYBOARD CONTROLS
-// ================================
+/* =========================================================
+   RESTART GAME
+========================================================= */
+
+function restartGame() {
+
+    startGame(currentLevel);
+
+}
+
+
+/* =========================================================
+   STOP GAME
+========================================================= */
+
+function stopGame() {
+
+    gameRunning = false;
+
+    gamePaused = false;
+
+    clearInterval(zombieSpawnTimer);
+
+    cancelAnimationFrame(gameLoopId);
+
+    clearZombies();
+
+    clearBullets();
+
+}
+
+
+/* =========================================================
+   RESET PLAYER
+========================================================= */
+
+function resetPlayerPosition() {
+
+    playerX =
+        (gameArea.clientWidth - player.offsetWidth) / 2;
+
+    playerY =
+        (gameArea.clientHeight - player.offsetHeight) / 2;
+
+    updatePlayerPosition();
+
+}
+
+
+/* =========================================================
+   UPDATE PLAYER POSITION
+========================================================= */
+
+function updatePlayerPosition() {
+
+    player.style.left = playerX + "px";
+
+    player.style.top = playerY + "px";
+
+}
+
+
+/* =========================================================
+   KEYBOARD INPUT
+========================================================= */
 
 document.addEventListener("keydown", function(event) {
 
     keys[event.key.toLowerCase()] = true;
+
+
+    /* Pause with P */
+
+    if (
+        event.key.toLowerCase() === "p" &&
+        gameRunning &&
+        !gameOver
+    ) {
+
+        togglePause();
+
+    }
+
+
+    /* Escape also pauses */
+
+    if (
+        event.key === "Escape" &&
+        gameRunning &&
+        !gameOver
+    ) {
+
+        togglePause();
+
+    }
 
 });
 
@@ -102,487 +318,465 @@ document.addEventListener("keyup", function(event) {
 });
 
 
-// ================================
-// PLAYER MOVEMENT
-// ================================
+/* =========================================================
+   PLAYER MOVEMENT
+========================================================= */
 
 function movePlayer() {
 
-    if (!gameRunning) return;
-
-    // W or Arrow Up
-    if (keys["w"] || keys["arrowup"]) {
-        playerY -= playerSpeed;
-    }
-
-    // S or Arrow Down
-    if (keys["s"] || keys["arrowdown"]) {
-        playerY += playerSpeed;
-    }
-
-    // A or Arrow Left
-    if (keys["a"] || keys["arrowleft"]) {
-        playerX -= playerSpeed;
-    }
-
-    // D or Arrow Right
-    if (keys["d"] || keys["arrowright"]) {
-        playerX += playerSpeed;
+    if (!gameRunning || gamePaused || gameOver) {
+        return;
     }
 
 
-    // Keep player inside game area
+    const speed = 5;
 
-    const maxX = gameArea.clientWidth - player.offsetWidth;
-    const maxY = gameArea.clientHeight - player.offsetHeight;
 
-    playerX = Math.max(0, Math.min(playerX, maxX));
-    playerY = Math.max(0, Math.min(playerY, maxY));
+    /* W / Arrow Up */
 
-    setPlayerPosition();
+    if (
+        keys["w"] ||
+        keys["arrowup"]
+    ) {
+
+        playerY -= speed;
+
+    }
+
+
+    /* S / Arrow Down */
+
+    if (
+        keys["s"] ||
+        keys["arrowdown"]
+    ) {
+
+        playerY += speed;
+
+    }
+
+
+    /* A / Arrow Left */
+
+    if (
+        keys["a"] ||
+        keys["arrowleft"]
+    ) {
+
+        playerX -= speed;
+
+    }
+
+
+    /* D / Arrow Right */
+
+    if (
+        keys["d"] ||
+        keys["arrowright"]
+    ) {
+
+        playerX += speed;
+
+    }
+
+
+    /* Keep player inside game */
+
+    const maxX =
+        gameArea.clientWidth - player.offsetWidth;
+
+    const maxY =
+        gameArea.clientHeight - player.offsetHeight;
+
+
+    if (playerX < 0) {
+        playerX = 0;
+    }
+
+
+    if (playerY < 0) {
+        playerY = 0;
+    }
+
+
+    if (playerX > maxX) {
+        playerX = maxX;
+    }
+
+
+    if (playerY > maxY) {
+        playerY = maxY;
+    }
+
+
+    updatePlayerPosition();
+
 }
 
 
-// ================================
-// CREATE ZOMBIE
-// ================================
+/* =========================================================
+   GAME LOOP
+========================================================= */
 
-function createZombie() {
+function startGameLoop() {
 
-    if (!gameRunning) return;
+    cancelAnimationFrame(gameLoopId);
 
-    const zombie = document.createElement("div");
+
+    function loop() {
+
+        if (gameRunning && !gamePaused && !gameOver) {
+
+            movePlayer();
+
+            moveZombies();
+
+            moveBullets();
+
+            checkZombieCollisions();
+
+            checkBulletCollisions();
+
+        }
+
+
+        gameLoopId =
+            requestAnimationFrame(loop);
+
+    }
+
+
+    loop();
+
+}
+
+
+/* =========================================================
+   ZOMBIE SPAWNER
+========================================================= */
+
+function startZombieSpawner() {
+
+    clearInterval(zombieSpawnTimer);
+
+
+    const settings =
+        levelSettings[currentLevel];
+
+
+    zombieSpawnTimer = setInterval(function() {
+
+        if (
+            !gameRunning ||
+            gamePaused ||
+            gameOver
+        ) {
+
+            return;
+
+        }
+
+
+        if (
+            zombies.length <
+            settings.maxZombies
+        ) {
+
+            spawnZombie();
+
+        }
+
+    }, settings.spawnTime);
+
+}
+
+
+/* =========================================================
+   SPAWN ZOMBIE
+========================================================= */
+
+function spawnZombie() {
+
+    const zombie =
+        document.createElement("div");
+
 
     zombie.classList.add("zombie");
 
     zombie.textContent = "🧟";
 
-    // Choose random side
-    const side = Math.floor(Math.random() * 4);
+
+    const size = 45;
+
 
     let x;
     let y;
 
+
+    /* Spawn randomly around edges */
+
+    const side =
+        Math.floor(Math.random() * 4);
+
+
     if (side === 0) {
-        // Top
-        x = Math.random() * gameArea.clientWidth;
+
+        x = Math.random() *
+            (gameArea.clientWidth - size);
+
         y = 0;
+
     }
 
     else if (side === 1) {
-        // Right
-        x = gameArea.clientWidth - 45;
-        y = Math.random() * gameArea.clientHeight;
+
+        x = gameArea.clientWidth - size;
+
+        y = Math.random() *
+            (gameArea.clientHeight - size);
+
     }
 
     else if (side === 2) {
-        // Bottom
-        x = Math.random() * gameArea.clientWidth;
-        y = gameArea.clientHeight - 45;
+
+        x = Math.random() *
+            (gameArea.clientWidth - size);
+
+        y = gameArea.clientHeight - size;
+
     }
 
     else {
-        // Left
+
         x = 0;
-        y = Math.random() * gameArea.clientHeight;
+
+        y = Math.random() *
+            (gameArea.clientHeight - size);
+
     }
 
 
     zombie.style.left = x + "px";
+
     zombie.style.top = y + "px";
+
 
     gameArea.appendChild(zombie);
 
+
     zombies.push({
+
         element: zombie,
+
         x: x,
+
         y: y
+
     });
 
+
     updateZombieCount();
+
 }
 
 
-// ================================
-// MOVE ZOMBIES
-// ================================
+/* =========================================================
+   MOVE ZOMBIES
+========================================================= */
 
 function moveZombies() {
 
-    if (!gameRunning) return;
-
-    zombies.forEach((zombie, index) => {
-
-        const dx = playerX - zombie.x;
-        const dy = playerY - zombie.y;
-
-        const distance = Math.sqrt(dx * dx + dy * dy);
-
-        if (distance > 0) {
-
-            zombie.x += (dx / distance) * zombieSpeed;
-            zombie.y += (dy / distance) * zombieSpeed;
-
-        }
-
-        zombie.element.style.left = zombie.x + "px";
-        zombie.element.style.top = zombie.y + "px";
+    const settings =
+        levelSettings[currentLevel];
 
 
-        // Zombie touches player
-        if (distance < 40) {
+    zombies.forEach(function(zombie) {
 
-            health -= 0.5;
+        const dx =
+            playerX - zombie.x;
 
-            healthDisplay.textContent = Math.max(0, Math.floor(health));
-
-            if (health <= 0) {
-                endGame();
-            }
-
-        }
-
-    });
-
-}
+        const dy =
+            playerY - zombie.y;
 
 
-// ================================
-// SHOOT BULLET
-// ================================
-
-gameArea.addEventListener("click", function(event) {
-
-    if (!gameRunning) return;
-
-    const rect = gameArea.getBoundingClientRect();
-
-    const targetX = event.clientX - rect.left;
-    const targetY = event.clientY - rect.top;
-
-    const playerCenterX = playerX + player.offsetWidth / 2;
-    const playerCenterY = playerY + player.offsetHeight / 2;
-
-    const dx = targetX - playerCenterX;
-    const dy = targetY - playerCenterY;
-
-    const distance = Math.sqrt(dx * dx + dy * dy);
-
-    if (distance === 0) return;
-
-    const bullet = document.createElement("div");
-
-    bullet.classList.add("bullet");
-
-    bullet.style.left = playerCenterX + "px";
-    bullet.style.top = playerCenterY + "px";
-
-    gameArea.appendChild(bullet);
-
-    bullets.push({
-        element: bullet,
-        x: playerCenterX,
-        y: playerCenterY,
-        dx: dx / distance,
-        dy: dy / distance
-    });
-
-});
-
-
-// ================================
-// MOVE BULLETS
-// ================================
-
-function moveBullets() {
-
-    if (!gameRunning) return;
-
-    bullets.forEach((bullet, bulletIndex) => {
-
-        bullet.x += bullet.dx * 10;
-        bullet.y += bullet.dy * 10;
-
-        bullet.element.style.left = bullet.x + "px";
-        bullet.element.style.top = bullet.y + "px";
-
-
-        // Remove bullet outside game
-        if (
-            bullet.x < 0 ||
-            bullet.x > gameArea.clientWidth ||
-            bullet.y < 0 ||
-            bullet.y > gameArea.clientHeight
-        ) {
-
-            bullet.element.remove();
-
-            bullets.splice(bulletIndex, 1);
-
-            return;
-        }
-
-
-        // Check collision with zombies
-        zombies.forEach((zombie, zombieIndex) => {
-
-            const distance = Math.sqrt(
-                Math.pow(bullet.x - zombie.x - 22, 2) +
-                Math.pow(bullet.y - zombie.y - 22, 2)
+        const distance =
+            Math.sqrt(
+                dx * dx +
+                dy * dy
             );
 
 
-            if (distance < 30) {
+        if (distance > 0) {
 
-                // Remove zombie
-                zombie.element.remove();
+            zombie.x +=
+                (dx / distance) *
+                settings.zombieSpeed;
 
-                zombies.splice(zombieIndex, 1);
+            zombie.y +=
+                (dy / distance) *
+                settings.zombieSpeed;
 
-                // Remove bullet
-                bullet.element.remove();
+        }
 
-                bullets.splice(bulletIndex, 1);
 
-                // Increase score
-                score += 10;
+        zombie.element.style.left =
+            zombie.x + "px";
 
-                scoreDisplay.textContent = score;
+        zombie.element.style.top =
+            zombie.y + "px";
 
-                updateZombieCount();
 
-            }
+        /* Zombie touches player */
 
-        });
+        if (
+            isColliding(
+                player,
+                zombie.element
+            )
+        ) {
+
+            damagePlayer(zombie);
+
+        }
 
     });
 
 }
 
 
-// ================================
-// UPDATE ZOMBIE COUNT
-// ================================
+/* =========================================================
+   PLAYER DAMAGE
+========================================================= */
 
-function updateZombieCount() {
+function damagePlayer(zombie) {
 
-    zombiesDisplay.textContent = zombies.length;
-
-}
+    health -= 1;
 
 
-// ================================
-// GAME OVER
-// ================================
-
-function endGame() {
-
-    gameRunning = false;
-
-    finalScoreDisplay.textContent = score;
-
-    gameOverScreen.classList.remove("hidden");
-
-}
-
-
-// ================================
-// RESTART GAME
-// ================================
-
-restartButton.addEventListener("click", function() {
-
-    startGame();
-
-});
-
-
-// ================================
-// GAME LOOP
-// ================================
-
-function gameLoop() {
-
-    movePlayer();
-
-    moveZombies();
-
-    moveBullets();
-
-    requestAnimationFrame(gameLoop);
-
-}
-
-
-// ================================
-// CREATE ZOMBIES AUTOMATICALLY
-// ================================
-
-setInterval(function() {
-
-    if (gameRunning) {
-        createZombie();
+    if (health < 0) {
+        health = 0;
     }
 
-}, 1500);
+
+    healthDisplay.textContent =
+        health;
 
 
-// ================================
-// START GAME
-// ================================
+    /* Push zombie away */
 
-startGame();
+    const dx =
+        zombie.x - playerX;
 
-gameLoop();
-
-// ================================
-// MOBILE TOUCH CONTROLS
-// ================================
-
-const mobileControls = {
-    up: document.getElementById("up-btn"),
-    down: document.getElementById("down-btn"),
-    left: document.getElementById("left-btn"),
-    right: document.getElementById("right-btn"),
-    fire: document.getElementById("fire-btn")
-};
+    const dy =
+        zombie.y - playerY;
 
 
-// ================================
-// MOBILE MOVEMENT
-// ================================
-
-function setupMobileButton(button, key) {
-
-    if (!button) return;
-
-    // Touch start
-    button.addEventListener("touchstart", function(event) {
-
-        event.preventDefault();
-        event.stopPropagation();
-
-        keys[key] = true;
-
-    }, { passive: false });
+    const distance =
+        Math.sqrt(
+            dx * dx +
+            dy * dy
+        ) || 1;
 
 
-    // Touch end
-    button.addEventListener("touchend", function(event) {
+    zombie.x +=
+        (dx / distance) * 20;
 
-        event.preventDefault();
-        event.stopPropagation();
-
-        keys[key] = false;
-
-    }, { passive: false });
+    zombie.y +=
+        (dy / distance) * 20;
 
 
-    // Touch cancelled
-    button.addEventListener("touchcancel", function(event) {
+    if (health <= 0) {
 
-        keys[key] = false;
+        endGame();
 
-    });
-
-
-    // Also support mouse
-    button.addEventListener("mousedown", function(event) {
-
-        event.preventDefault();
-
-        keys[key] = true;
-
-    });
-
-
-    button.addEventListener("mouseup", function() {
-
-        keys[key] = false;
-
-    });
-
-
-    button.addEventListener("mouseleave", function() {
-
-        keys[key] = false;
-
-    });
+    }
 
 }
 
 
-// Setup movement buttons
+/* =========================================================
+   SHOOTING
+========================================================= */
 
-setupMobileButton(mobileControls.up, "arrowup");
-setupMobileButton(mobileControls.down, "arrowdown");
-setupMobileButton(mobileControls.left, "arrowleft");
-setupMobileButton(mobileControls.right, "arrowright");
+gameArea.addEventListener(
+    "click",
+    function(event) {
+
+        if (
+            !gameRunning ||
+            gamePaused ||
+            gameOver
+        ) {
+
+            return;
+
+        }
 
 
-// ================================
-// MOBILE FIRE BUTTON
-// ================================
+        shoot(event);
 
-function mobileShoot() {
+    }
+);
 
-    if (!gameRunning) return;
 
-    // If there are no zombies, do nothing
-    if (zombies.length === 0) return;
+/* =========================================================
+   CREATE BULLET
+========================================================= */
+
+function shoot(event) {
+
+    const rect =
+        gameArea.getBoundingClientRect();
+
+
+    const targetX =
+        event.clientX - rect.left;
+
+
+    const targetY =
+        event.clientY - rect.top;
+
 
     const playerCenterX =
         playerX + player.offsetWidth / 2;
+
 
     const playerCenterY =
         playerY + player.offsetHeight / 2;
 
 
-    // Find nearest zombie
+    const dx =
+        targetX - playerCenterX;
 
-    let nearestZombie = null;
-    let nearestDistance = Infinity;
-
-
-    zombies.forEach(function(zombie) {
-
-        const dx = zombie.x - playerCenterX;
-        const dy = zombie.y - playerCenterY;
-
-        const distance = Math.sqrt(dx * dx + dy * dy);
-
-        if (distance < nearestDistance) {
-
-            nearestDistance = distance;
-            nearestZombie = zombie;
-
-        }
-
-    });
+    const dy =
+        targetY - playerCenterY;
 
 
-    if (!nearestZombie) return;
+    const distance =
+        Math.sqrt(
+            dx * dx +
+            dy * dy
+        );
 
 
-    // Direction toward zombie
-
-    const dx = nearestZombie.x - playerCenterX;
-    const dy = nearestZombie.y - playerCenterY;
-
-    const distance = Math.sqrt(dx * dx + dy * dy);
+    if (distance === 0) {
+        return;
+    }
 
 
-    if (distance === 0) return;
+    const bullet =
+        document.createElement("div");
 
-
-    // Create bullet
-
-    const bullet = document.createElement("div");
 
     bullet.classList.add("bullet");
 
-    bullet.style.left = playerCenterX + "px";
-    bullet.style.top = playerCenterY + "px";
+
+    bullet.style.left =
+        playerCenterX + "px";
+
+    bullet.style.top =
+        playerCenterY + "px";
+
 
     gameArea.appendChild(bullet);
 
@@ -604,27 +798,535 @@ function mobileShoot() {
 }
 
 
-// Fire button
+/* =========================================================
+   MOVE BULLETS
+========================================================= */
 
-if (mobileControls.fire) {
+function moveBullets() {
 
-    mobileControls.fire.addEventListener("touchstart", function(event) {
-
-        event.preventDefault();
-        event.stopPropagation();
-
-        mobileShoot();
-
-    }, { passive: false });
+    const bulletSpeed = 10;
 
 
-    mobileControls.fire.addEventListener("click", function(event) {
+    bullets.forEach(function(bullet) {
 
-        event.preventDefault();
-        event.stopPropagation();
+        bullet.x +=
+            bullet.dx * bulletSpeed;
 
-        mobileShoot();
+        bullet.y +=
+            bullet.dy * bulletSpeed;
+
+
+        bullet.element.style.left =
+            bullet.x + "px";
+
+        bullet.element.style.top =
+            bullet.y + "px";
 
     });
 
+
+    /* Remove bullets outside game */
+
+    bullets =
+        bullets.filter(function(bullet) {
+
+            if (
+                bullet.x < -20 ||
+                bullet.x > gameArea.clientWidth + 20 ||
+                bullet.y < -20 ||
+                bullet.y > gameArea.clientHeight + 20
+            ) {
+
+                bullet.element.remove();
+
+                return false;
+
+            }
+
+
+            return true;
+
+        });
+
 }
+
+
+/* =========================================================
+   BULLET / ZOMBIE COLLISION
+========================================================= */
+
+function checkBulletCollisions() {
+
+    for (
+        let i = bullets.length - 1;
+        i >= 0;
+        i--
+    ) {
+
+        const bullet =
+            bullets[i];
+
+
+        for (
+            let j = zombies.length - 1;
+            j >= 0;
+            j--
+        ) {
+
+            const zombie =
+                zombies[j];
+
+
+            if (
+                isColliding(
+                    bullet.element,
+                    zombie.element
+                )
+            ) {
+
+                /* Remove bullet */
+
+                bullet.element.remove();
+
+                bullets.splice(i, 1);
+
+
+                /* Remove zombie */
+
+                zombie.element.remove();
+
+                zombies.splice(j, 1);
+
+
+                /* Increase score */
+
+                score += 10;
+
+                scoreDisplay.textContent =
+                    score;
+
+
+                updateZombieCount();
+
+
+                checkLevelProgress();
+
+
+                break;
+
+            }
+
+        }
+
+    }
+
+}
+
+
+/* =========================================================
+   ZOMBIE COLLISIONS
+========================================================= */
+
+function checkZombieCollisions() {
+
+    /* Collision is handled while zombies move */
+
+}
+
+
+/* =========================================================
+   COLLISION FUNCTION
+========================================================= */
+
+function isColliding(
+    element1,
+    element2
+) {
+
+    const rect1 =
+        element1.getBoundingClientRect();
+
+    const rect2 =
+        element2.getBoundingClientRect();
+
+
+    return !(
+        rect1.right < rect2.left ||
+        rect1.left > rect2.right ||
+        rect1.bottom < rect2.top ||
+        rect1.top > rect2.bottom
+    );
+
+}
+
+
+/* =========================================================
+   LEVEL PROGRESS
+========================================================= */
+
+function checkLevelProgress() {
+
+    const settings =
+        levelSettings[currentLevel];
+
+
+    const requiredScore =
+        settings.zombiesToNext * 10;
+
+
+    if (
+        currentLevel < 5 &&
+        score >= requiredScore
+    ) {
+
+        nextLevel();
+
+    }
+
+}
+
+
+/* =========================================================
+   NEXT LEVEL
+========================================================= */
+
+function nextLevel() {
+
+    currentLevel++;
+
+
+    health = Math.min(
+        health + 20,
+        100
+    );
+
+
+    clearZombies();
+
+
+    updateDisplays();
+
+
+    levelDisplay.textContent =
+        currentLevel;
+
+
+    /* Restart zombie spawning */
+
+    startZombieSpawner();
+
+
+    alert(
+        "🎉 Level " +
+        currentLevel +
+        " Started!"
+    );
+
+}
+
+
+/* =========================================================
+   PAUSE / RESUME
+========================================================= */
+
+function togglePause() {
+
+    if (
+        !gameRunning ||
+        gameOver
+    ) {
+
+        return;
+
+    }
+
+
+    if (gamePaused) {
+
+        resumeGame();
+
+    }
+
+    else {
+
+        pauseGame();
+
+    }
+
+}
+
+
+/* =========================================================
+   PAUSE GAME
+========================================================= */
+
+function pauseGame() {
+
+    gamePaused = true;
+
+    pauseScreen.classList.remove("hidden");
+
+    pauseBtn.textContent =
+        "▶️ Resume Game";
+
+}
+
+
+/* =========================================================
+   RESUME GAME
+========================================================= */
+
+function resumeGame() {
+
+    gamePaused = false;
+
+    pauseScreen.classList.add("hidden");
+
+    pauseBtn.textContent =
+        "⏸️ Pause Game";
+
+}
+
+
+/* =========================================================
+   GAME OVER
+========================================================= */
+
+function endGame() {
+
+    gameOver = true;
+
+    gameRunning = false;
+
+    gamePaused = false;
+
+
+    clearInterval(zombieSpawnTimer);
+
+    cancelAnimationFrame(gameLoopId);
+
+
+    finalScoreDisplay.textContent =
+        score;
+
+
+    gameOverScreen.classList.remove(
+        "hidden"
+    );
+
+}
+
+
+/* =========================================================
+   CLEAR ZOMBIES
+========================================================= */
+
+function clearZombies() {
+
+    zombies.forEach(function(zombie) {
+
+        zombie.element.remove();
+
+    });
+
+
+    zombies = [];
+
+
+    updateZombieCount();
+
+}
+
+
+/* =========================================================
+   CLEAR BULLETS
+========================================================= */
+
+function clearBullets() {
+
+    bullets.forEach(function(bullet) {
+
+        bullet.element.remove();
+
+    });
+
+
+    bullets = [];
+
+}
+
+
+/* =========================================================
+   UPDATE DISPLAYS
+========================================================= */
+
+function updateDisplays() {
+
+    healthDisplay.textContent =
+        health;
+
+    scoreDisplay.textContent =
+        score;
+
+    levelDisplay.textContent =
+        currentLevel;
+
+    updateZombieCount();
+
+}
+
+
+/* =========================================================
+   UPDATE ZOMBIE COUNT
+========================================================= */
+
+function updateZombieCount() {
+
+    zombiesDisplay.textContent =
+        zombies.length;
+
+}
+
+
+/* =========================================================
+   BUTTON EVENTS
+========================================================= */
+
+
+/* Start Game */
+
+startGameBtn.addEventListener(
+    "click",
+    function() {
+
+        startGame(1);
+
+    }
+);
+
+
+/* Open Level Menu */
+
+levelsBtn.addEventListener(
+    "click",
+    function() {
+
+        showLevelMenu();
+
+    }
+);
+
+
+/* Open How To Play */
+
+howToPlayBtn.addEventListener(
+    "click",
+    function() {
+
+        showInstructions();
+
+    }
+);
+
+
+/* Back from Level Menu */
+
+backMenuBtn.addEventListener(
+    "click",
+    function() {
+
+        showMainMenu();
+
+    }
+);
+
+
+/* Back from Instructions */
+
+backInstructionsBtn.addEventListener(
+    "click",
+    function() {
+
+        showMainMenu();
+
+    }
+);
+
+
+/* Level buttons */
+
+levelButtons.forEach(
+    function(button) {
+
+        button.addEventListener(
+            "click",
+            function() {
+
+                const level =
+                    Number(
+                        button.dataset.level
+                    );
+
+
+                startGame(level);
+
+            }
+        );
+
+    }
+);
+
+
+/* Pause */
+
+pauseBtn.addEventListener(
+    "click",
+    function() {
+
+        togglePause();
+
+    }
+);
+
+
+/* Resume */
+
+resumeBtn.addEventListener(
+    "click",
+    function() {
+
+        resumeGame();
+
+    }
+);
+
+
+/* Restart */
+
+restartBtn.addEventListener(
+    "click",
+    function() {
+
+        restartGame();
+
+    }
+);
+
+
+/* Main Menu */
+
+menuBtn.addEventListener(
+    "click",
+    function() {
+
+        showMainMenu();
+
+    }
+);
+
+
+/* =========================================================
+   INITIAL GAME STATE
+========================================================= */
+
+showMainMenu();

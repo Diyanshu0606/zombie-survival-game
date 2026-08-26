@@ -1,6 +1,6 @@
-/* =========================
+/* =========================================================
    GENERAL PAGE
-========================= */
+========================================================= */
 
 * {
     margin: 0;
@@ -17,82 +17,419 @@ body {
 }
 
 
-/* =========================
+/* =========================================================
+   MAIN MENU / LEVEL MENU / HOW TO PLAY
+========================================================= */
+
+#main-menu,
+#level-menu,
+#instructions-menu {
+    min-height: 100vh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+
+    background:
+        linear-gradient(
+            rgba(0, 0, 0, 0.75),
+            rgba(0, 0, 0, 0.9)
+        ),
+        #263526;
+}
+
+
+/* =========================================================
+   MENU CONTENT
+========================================================= */
+
+.menu-content {
+    width: 90%;
+    max-width: 500px;
+
+    padding: 45px 30px;
+
+    background: rgba(25, 25, 25, 0.97);
+
+    border: 3px solid #4caf50;
+
+    border-radius: 20px;
+
+    box-shadow:
+        0 0 35px rgba(0, 0, 0, 0.8);
+}
+
+
+/* Main title */
+
+.menu-content h1 {
+    font-size: 48px;
+
+    margin-bottom: 15px;
+
+    color: #7bed4f;
+
+    text-shadow:
+        0 0 12px rgba(76, 175, 80, 0.7);
+}
+
+
+/* Menu headings */
+
+.menu-content h2 {
+    font-size: 36px;
+
+    margin-bottom: 20px;
+}
+
+
+/* Subtitle */
+
+.menu-subtitle {
+    color: #ccc;
+
+    font-size: 18px;
+
+    margin-bottom: 30px;
+}
+
+
+/* =========================================================
+   MENU BUTTONS
+========================================================= */
+
+.menu-content button {
+    display: block;
+
+    width: 100%;
+
+    max-width: 350px;
+
+    margin: 12px auto;
+
+    padding: 14px 20px;
+
+    border: none;
+
+    border-radius: 10px;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    color: white;
+
+    background: #292929;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+
+.menu-content button:hover {
+    transform: scale(1.04);
+
+    background: #3d3d3d;
+}
+
+
+.menu-content button:active {
+    transform: scale(0.97);
+}
+
+
+/* =========================================================
+   START GAME BUTTON
+========================================================= */
+
+#start-game-btn {
+    background: #2ecc71;
+}
+
+
+#start-game-btn:hover {
+    background: #27ae60;
+}
+
+
+/* =========================================================
+   LEVELS BUTTON
+========================================================= */
+
+#levels-btn {
+    background: #3498db;
+}
+
+
+#levels-btn:hover {
+    background: #2980b9;
+}
+
+
+/* =========================================================
+   HOW TO PLAY BUTTON
+========================================================= */
+
+#how-to-play-btn {
+    background: #8e44ad;
+}
+
+
+#how-to-play-btn:hover {
+    background: #71368a;
+}
+
+
+/* =========================================================
+   LEVEL BUTTONS
+========================================================= */
+
+.level-btn {
+    display: flex !important;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 5px;
+}
+
+
+.level-btn small {
+    color: #bbb;
+
+    font-size: 13px;
+
+    font-weight: normal;
+}
+
+
+/* Level 1 */
+
+.level-btn[data-level="1"] {
+    border-left: 5px solid #2ecc71;
+}
+
+
+/* Level 2 */
+
+.level-btn[data-level="2"] {
+    border-left: 5px solid #3498db;
+}
+
+
+/* Level 3 */
+
+.level-btn[data-level="3"] {
+    border-left: 5px solid #f39c12;
+}
+
+
+/* Level 4 */
+
+.level-btn[data-level="4"] {
+    border-left: 5px solid #9b59b6;
+}
+
+
+/* Level 5 */
+
+.level-btn[data-level="5"] {
+    border-left: 5px solid #e74c3c;
+}
+
+
+/* =========================================================
+   BACK BUTTONS
+========================================================= */
+
+#back-menu-btn,
+#back-instructions-btn {
+    background: #555;
+}
+
+
+#back-menu-btn:hover,
+#back-instructions-btn:hover {
+    background: #666;
+}
+
+
+/* =========================================================
+   HOW TO PLAY CONTENT
+========================================================= */
+
+#instructions-menu .menu-content p {
+    color: #ccc;
+
+    font-size: 16px;
+
+    line-height: 1.6;
+
+    margin: 10px 0;
+}
+
+
+/* =========================================================
+   GAME CONTAINER
+========================================================= */
+
+#game-container {
+    min-height: 100vh;
+}
+
+
+/* =========================================================
    GAME HEADER
-========================= */
+========================================================= */
 
 .game-header {
     background: #1b1b1b;
+
     padding: 15px;
+
     border-bottom: 2px solid #444;
 }
 
+
 .game-header h1 {
     margin-bottom: 12px;
+
     font-size: 28px;
 }
 
+
 .game-stats {
     display: flex;
+
     justify-content: center;
-    gap: 30px;
+
+    align-items: center;
+
+    gap: 15px;
+
     font-size: 18px;
+
+    flex-wrap: wrap;
 }
+
 
 .game-stats span {
     background: #292929;
+
     padding: 8px 15px;
+
     border-radius: 8px;
 }
 
 
-/* =========================
+/* =========================================================
+   PAUSE BUTTON
+========================================================= */
+
+#pause-btn {
+    padding: 8px 15px;
+
+    font-size: 16px;
+
+    font-weight: bold;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #f39c12;
+
+    color: white;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+
+#pause-btn:hover {
+    background: #d68910;
+
+    transform: scale(1.05);
+}
+
+
+#pause-btn:active {
+    transform: scale(0.95);
+}
+
+
+/* =========================================================
    GAME AREA
-========================= */
+========================================================= */
 
 #game-area {
     position: relative;
+
     width: 90%;
+
     max-width: 1000px;
+
     height: 600px;
+
     margin: 25px auto;
+
     overflow: hidden;
 
     background-color: #263526;
 
     background-image:
-        linear-gradient(#304530 1px, transparent 1px),
-        linear-gradient(90deg, #304530 1px, transparent 1px);
+        linear-gradient(
+            #304530 1px,
+            transparent 1px
+        ),
+        linear-gradient(
+            90deg,
+            #304530 1px,
+            transparent 1px
+        );
 
     background-size: 40px 40px;
 
     border: 4px solid #555;
+
     border-radius: 12px;
 
     cursor: crosshair;
 }
 
 
-/* =========================
+/* =========================================================
    PLAYER
-========================= */
+========================================================= */
 
 #player {
     position: absolute;
 
     width: 45px;
+
     height: 45px;
 
     display: flex;
+
     align-items: center;
+
     justify-content: center;
 
     font-size: 30px;
 
     background: #3498db;
+
     border-radius: 50%;
 
     left: 50%;
+
     top: 50%;
 
     transform: translate(-50%, -50%);
@@ -101,35 +438,40 @@ body {
 }
 
 
-/* =========================
+/* =========================================================
    ZOMBIES
-========================= */
+========================================================= */
 
 .zombie {
     position: absolute;
 
     width: 45px;
+
     height: 45px;
 
     display: flex;
+
     align-items: center;
+
     justify-content: center;
 
     font-size: 30px;
 
     background: #4caf50;
+
     border-radius: 50%;
 }
 
 
-/* =========================
+/* =========================================================
    BULLETS
-========================= */
+========================================================= */
 
 .bullet {
     position: absolute;
 
     width: 10px;
+
     height: 10px;
 
     background: #ffd700;
@@ -140,94 +482,232 @@ body {
 }
 
 
-/* =========================
+/* =========================================================
+   PAUSE SCREEN
+========================================================= */
+
+#pause-screen {
+    position: fixed;
+
+    top: 50%;
+
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    width: 90%;
+
+    max-width: 450px;
+
+    padding: 40px;
+
+    background: rgba(20, 20, 20, 0.97);
+
+    border: 3px solid #f39c12;
+
+    border-radius: 15px;
+
+    box-shadow:
+        0 0 30px rgba(0, 0, 0, 0.8);
+
+    z-index: 200;
+}
+
+
+#pause-screen h2 {
+    font-size: 40px;
+
+    margin-bottom: 15px;
+}
+
+
+#pause-screen p {
+    font-size: 18px;
+
+    color: #ccc;
+
+    margin-bottom: 25px;
+}
+
+
+/* =========================================================
+   RESUME BUTTON
+========================================================= */
+
+#resume-btn {
+    padding: 12px 25px;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #2ecc71;
+
+    color: white;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+
+#resume-btn:hover {
+    background: #27ae60;
+
+    transform: scale(1.05);
+}
+
+
+#resume-btn:active {
+    transform: scale(0.95);
+}
+
+
+/* =========================================================
    GAME OVER
-========================= */
+========================================================= */
 
 #game-over {
     position: fixed;
 
     top: 50%;
+
     left: 50%;
 
     transform: translate(-50%, -50%);
+
+    width: 90%;
+
+    max-width: 450px;
 
     background: #1c1c1c;
 
     padding: 40px;
 
     border: 3px solid #e74c3c;
+
     border-radius: 15px;
 
-    z-index: 100;
+    z-index: 300;
+
+    box-shadow:
+        0 0 30px rgba(0, 0, 0, 0.8);
 }
+
 
 #game-over h2 {
     font-size: 40px;
+
     margin-bottom: 15px;
 }
 
+
 #game-over p {
     font-size: 20px;
+
     margin-bottom: 20px;
 }
 
 
-/* =========================
+/* =========================================================
    RESTART BUTTON
-========================= */
+========================================================= */
 
 #restart-btn {
     padding: 12px 25px;
 
     font-size: 18px;
+
     font-weight: bold;
 
     border: none;
+
     border-radius: 8px;
 
     background: #e74c3c;
+
     color: white;
 
     cursor: pointer;
+
+    margin: 5px;
 }
+
 
 #restart-btn:hover {
     background: #c0392b;
 }
 
 
-/* =========================
-   HIDDEN CLASS
-========================= */
+/* =========================================================
+   MAIN MENU BUTTON
+========================================================= */
 
-.hidden {
-    display: none;
+#menu-btn {
+    padding: 12px 25px;
+
+    font-size: 18px;
+
+    font-weight: bold;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background: #3498db;
+
+    color: white;
+
+    cursor: pointer;
+
+    margin: 5px;
 }
 
 
-/* =========================
-   INSTRUCTIONS
-========================= */
+#menu-btn:hover {
+    background: #2980b9;
+}
+
+
+/* =========================================================
+   HIDDEN
+========================================================= */
+
+.hidden {
+    display: none !important;
+}
+
+
+/* =========================================================
+   GAME INSTRUCTIONS
+========================================================= */
 
 .instructions {
     padding: 20px;
+
     margin-bottom: 20px;
 }
+
 
 .instructions h2 {
     margin-bottom: 12px;
 }
 
+
 .instructions p {
     margin: 6px;
+
     color: #ccc;
 }
 
 
-/* =========================
+/* =========================================================
    MOBILE CONTROLS
-========================= */
+========================================================= */
 
 #mobile-controls {
     display: none;
@@ -235,6 +715,7 @@ body {
     position: fixed;
 
     bottom: 15px;
+
     left: 0;
 
     width: 100%;
@@ -243,6 +724,7 @@ body {
 
     pointer-events: none;
 }
+
 
 .control-row {
     display: flex;
@@ -254,11 +736,14 @@ body {
     margin: 7px 0;
 }
 
+
 .control-btn {
     width: 65px;
+
     height: 65px;
 
     border: none;
+
     border-radius: 15px;
 
     background: rgba(40, 40, 40, 0.9);
@@ -266,6 +751,7 @@ body {
     color: white;
 
     font-size: 28px;
+
     font-weight: bold;
 
     cursor: pointer;
@@ -273,12 +759,15 @@ body {
     touch-action: none;
 
     user-select: none;
+
     -webkit-user-select: none;
 
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+    box-shadow:
+        0 4px 10px rgba(0, 0, 0, 0.5);
 
     pointer-events: auto;
 }
+
 
 .control-btn:active {
     transform: scale(0.9);
@@ -286,18 +775,20 @@ body {
     background: rgba(80, 80, 80, 0.95);
 }
 
+
 .fire-btn {
     background: rgba(190, 40, 40, 0.95);
 }
+
 
 .fire-btn:active {
     background: rgba(230, 60, 60, 1);
 }
 
 
-/* =========================
-   MOBILE / TABLET
-========================= */
+/* =========================================================
+   TABLET
+========================================================= */
 
 @media (max-width: 768px) {
 
@@ -305,12 +796,44 @@ body {
         display: block;
     }
 
+
+    .menu-content {
+        padding: 35px 20px;
+    }
+
+
+    .menu-content h1 {
+        font-size: 38px;
+    }
+
+
+    .menu-content h2 {
+        font-size: 30px;
+    }
+
+
+    #pause-btn {
+        font-size: 14px;
+
+        padding: 7px 12px;
+    }
+
+
+    #pause-screen {
+        padding: 30px 20px;
+    }
+
+
+    #pause-screen h2 {
+        font-size: 32px;
+    }
+
 }
 
 
-/* =========================
+/* =========================================================
    SMALL PHONE
-========================= */
+========================================================= */
 
 @media (max-width: 600px) {
 
@@ -318,10 +841,13 @@ body {
         padding: 10px;
     }
 
+
     .game-header h1 {
         font-size: 22px;
+
         margin-bottom: 8px;
     }
+
 
     .game-stats {
         gap: 8px;
@@ -331,9 +857,20 @@ body {
         font-size: 14px;
     }
 
+
     .game-stats span {
         padding: 6px 8px;
     }
+
+
+    #pause-btn {
+        width: 100%;
+
+        max-width: 180px;
+
+        padding: 8px 10px;
+    }
+
 
     #game-area {
         width: 95%;
@@ -343,19 +880,48 @@ body {
         margin: 15px auto;
     }
 
+
     #player {
         width: 42px;
+
         height: 42px;
 
         font-size: 28px;
     }
+
 
     .zombie {
         width: 42px;
+
         height: 42px;
 
         font-size: 28px;
     }
+
+
+    #pause-screen {
+        width: 90%;
+
+        padding: 30px 15px;
+    }
+
+
+    #pause-screen h2 {
+        font-size: 30px;
+    }
+
+
+    #pause-screen p {
+        font-size: 16px;
+    }
+
+
+    #resume-btn {
+        font-size: 16px;
+
+        padding: 10px 20px;
+    }
+
 
     #game-over {
         width: 90%;
@@ -363,46 +929,85 @@ body {
         padding: 30px 15px;
     }
 
+
     #game-over h2 {
         font-size: 30px;
     }
+
 
     #game-over p {
         font-size: 18px;
     }
 
-    #restart-btn {
+
+    #restart-btn,
+    #menu-btn {
         font-size: 16px;
 
         padding: 10px 20px;
+
+        width: 90%;
     }
+
 
     .instructions {
         padding: 15px;
     }
 
+
     .instructions p {
         font-size: 14px;
     }
 
+
     .control-btn {
         width: 60px;
+
         height: 60px;
 
         font-size: 25px;
     }
 
+
     .control-row {
         gap: 10px;
+
         margin: 5px 0;
+    }
+
+
+    .menu-content {
+        padding: 30px 15px;
+    }
+
+
+    .menu-content h1 {
+        font-size: 32px;
+    }
+
+
+    .menu-content h2 {
+        font-size: 27px;
+    }
+
+
+    .menu-content button {
+        font-size: 16px;
+
+        padding: 12px 15px;
+    }
+
+
+    #instructions-menu .menu-content p {
+        font-size: 14px;
     }
 
 }
 
 
-/* =========================
+/* =========================================================
    VERY SMALL PHONES
-========================= */
+========================================================= */
 
 @media (max-width: 380px) {
 
@@ -410,11 +1015,23 @@ body {
         height: 450px;
     }
 
+
     .control-btn {
         width: 55px;
+
         height: 55px;
 
         font-size: 22px;
+    }
+
+
+    #pause-screen h2 {
+        font-size: 26px;
+    }
+
+
+    .menu-content h1 {
+        font-size: 28px;
     }
 
 }
